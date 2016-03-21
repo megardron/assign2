@@ -15,6 +15,7 @@ static char* del = "DELETE";
 static char* cnt = "COUNT";
 static char* fnd = "FIND";
 static char* rmv = "REMOVE";
+static char* srch = "SEARCH";
 
 int *dispatch(char *input, CLIENT *cl) {
 	if (!memcmp(input, app, strlen(app))) {
@@ -34,6 +35,13 @@ int *dispatch(char *input, CLIENT *cl) {
 		char *x = find_1(&input, cl);
 		int n = 0;
 		printf("finding %s,   %d\n", x, strlen(x));
+		
+		return x;
+	}
+	if (!memcmp(input, srch, strlen(fnd))) {
+		char *x = search_1(&input, cl);
+		int n = 0;
+		printf("searching %s,   %d\n", x, strlen(x));
 		
 		return x;
 	}
@@ -110,10 +118,6 @@ int main(int argc, char *argv[])
 			argv[0], server);
 		exit(1);
 	}
-	char b[30] = "to dsaf ggdaf";
-	char * a = b;
-	strcpy(a, a+(strlen("he")));
-	printf("%s\n", a);
 	
 	/*
 	 * The message was output on the server

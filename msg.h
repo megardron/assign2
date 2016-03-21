@@ -37,8 +37,8 @@ extern  int * count_1_svc(char **, struct svc_req *);
 extern  char * find_1(char **, CLIENT *);
 extern  char * find_1_svc(char **, struct svc_req *);
 #define SEARCH 7
-extern  int * search_1(char **, CLIENT *);
-extern  int * search_1_svc(char **, struct svc_req *);
+extern  char * search_1(char **, CLIENT *);
+extern  char * search_1_svc(char **, struct svc_req *);
 extern int messageprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -61,8 +61,8 @@ extern  int * count_1_svc();
 extern  char * find_1();
 extern  char * find_1_svc();
 #define SEARCH 7
-extern  int * search_1();
-extern  int * search_1_svc();
+extern  char * search_1();
+extern  char * search_1_svc();
 extern int messageprog_1_freeresult ();
 #endif /* K&R C */
 

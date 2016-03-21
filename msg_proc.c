@@ -16,7 +16,10 @@
 int append_l = 7;
 int count_l = 6;
 int find_l = 5;
-
+//todo: 
+	//return strings
+	//first word
+	//partial matches
 int *printmessage_1_svc(char **msg, struct svc_req *rqstp)
 {
 	static int result; /* must be static! */
@@ -50,7 +53,7 @@ int *append_1_svc (char **msg, struct svc_req *rqstp) {
 	char *m = s;
 	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
 	s[strlen(*msg)-append_l-1] = '\0';
-	fprintf(f, "%s\n", m);//writes message
+	fprintf(f, "\n%s", m);//writes message
 	fclose(f);
 
 	result = 1;
@@ -210,7 +213,52 @@ int *remove_1_svc (char **msg, struct svc_req *rqstp){
 	return (&result);
 }
 
-int *search_1_svc (char **msg, struct svc_req *rqstp){}
+char *search_1_svc (char **msg, struct svc_req *rqstp){
+	static char result;
+	FILE *f;
+	printf("starting search\n");
+	int x;
+	char s[100]; //get rid of word and brackets
+	char *m = s;
+	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
+	printf("%s\n", m);
+	s[strlen(*msg)-append_l-1] = '\0';
+
+	f = fopen("output.txt", "r");// opens output file 
+	if (f == NULL) 
+	{
+		result = 0;
+		return (&result);
+	}
+	fseek(f,0, SEEK_END);
+	int l = ftell(f);
+	fseek(f,-l,SEEK_END);
+	
+	char t[l];
+	static char * temp;
+	temp = t;
+	char * format;
+	//sprintf(format, "%c%d%c\0", '%', l, 'c');
+	fscanf(f, "%500c", temp);
+	char * temp2 = strstr(temp,m);
+	printf("%s\n", temp2);
+	int n = 0;
+	while (*(temp2-n)!= '\n'){
+		printf("%c, %d\n", *(temp2-n), n);
+		n++;
+	}
+	temp2 = temp2-n;
+	printf("temp %s\n", temp);
+	printf("temp2 %s\n", temp2);
+	while (*(temp+n)!= '\n'){
+		n++;
+	}
+	*(temp+n) = '\0';
+	static char t2;
+	printf("the return is %s\n", temp);
+	t2 = *temp;
+	return &t2;
+}
 
 int *count_1_svc (char **msg, struct svc_req *rqstp) { //fix for first being the thing you want
 

@@ -8,5 +8,8 @@
 ./client localhost "DELETE(to)"
 ./client localhost "FIND(3)"
 
+./client localhost "SEARCH(be)"
+./client localhost "SEARCH(another)"
+
 ./client localhost "REMOVE(This is another sentence.)"
 cat output.txt

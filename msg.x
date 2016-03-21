@@ -12,6 +12,6 @@ program MESSAGEPROG {
 		int REMOVE(string) = 4;
 		int COUNT(string) = 5;
 		char FIND(string) = 6;
-		int SEARCH(string) = 7;
+		char SEARCH(string) = 7;
 	} = 1;
 } = 0x20083001;
