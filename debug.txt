@@ -1,0 +1,3 @@
+In order to help make the testing process smoother, we created a bash script that would automate some commands including the test cases specified in the assignment:
+
+/**PUT FINAL SCRIPT HERE**/
