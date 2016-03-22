@@ -28,7 +28,6 @@ int get_next_sentence(FILE *f, char *sen) {
 	for (int i = 0; i<100; i++) {
 		if (*(sen+i)=='\n') {
 			*(sen+i+1) = '\0';
-			printf("%d\n", i);
 			return i;
 		}
 	}
@@ -79,7 +78,6 @@ int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	for (int i = 0; i<l; i++) {
 		fseek(f, i, SEEK_SET);
 		i = i+get_next_sentence(f,temp);
-		printf("%d          %s\n %s\n",i, temp, new);
 		char *w;
 		if (i<l) {
 		while (w = strstr(temp,m)) {
@@ -92,66 +90,85 @@ int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	}
 	fclose(f);
 	f = fopen("output.txt", "w");
-	printf("done the for\n%s\n", new);
 	fprintf(f, "%s", new);
-	printf("file printed\n");
 	fclose(f);
 	result = 1;
 	return &result;
 }
 
-char *find_1_svc (char **msg, struct svc_req *rqstp){
-	static char result;
+int *find_1_svc (char **msg, struct svc_req *rqstp) {
+	static int result;
 	FILE *f;
-	printf("why ?\n");
-	int x;
-	char s[100]; //get rid of word and brackets
-	char *m = s;
-	printf("???\n");
-	strncpy(m, *msg+find_l, strlen(*msg)-find_l-1);
-	printf("%s\n", m);
-	s[strlen(*msg)] = '\0';
-	printf("%d\n", m);
-	x = atoi(m);
-	printf("%d\n", x);
-
 	f = fopen("output.txt", "r");// opens output file 
 	if (f == NULL) 
 	{
 		result = 0;
 		return (&result);
 	}
-	fseek(f,0, SEEK_END);
-	int l = ftell(f);
-	fseek(f,-l,SEEK_END);
 	
-	char t[l];
-	static char * temp;
-	temp = t;
-	char * format;
-	//sprintf(format, "%c%d%c\0", '%', l, 'c');
-	fscanf(f, "%500c", temp);
-	for (int i=0; i<x-1;i++) {
-		int n = 0;
-		while (*(temp+n)!= '\n'){
-			//printf("%c, %d\n", *(temp+n), n);
-			n++;
-		}
-		strcpy(temp, temp+n+1);
-		//printf("%s %d\n", temp, i);
+	int x;
+	char s[100]; //get rid of word and brackets
+	char *m = s;
+	strncpy(m, *msg+find_l, strlen(*msg)-find_l-1);
+
+	s[strlen(*msg)] = '\0';
+	x = atoi(m);
+	int l = 0;
+	char temp[100];
+	for (int i = 0; i<x; i++) {
+		l = l+get_next_sentence(f, temp)+1;
+		fseek(f, l, SEEK_SET);
 	}
-	int n= 0;
-	while (*(temp+n)!= '\n'){
-		n++;
-	}
-	*(temp+n) = '\0';
-	static char t2;
-	t2 = *temp;
-	return &t2;
-	
+	*(*msg) = *temp;
+	result = 1;
+	return &result;
+
 }
 
 int *remove_1_svc (char **msg, struct svc_req *rqstp){
+	static int result; /* must be static! */
+	FILE *f;
+	f = fopen("output.txt", "r");
+	if (f == NULL) 
+	{
+		result = 0;
+		return (&result);
+	}
+	char s[100]; //get rid of word and brackets - should be a function
+	char *m = s;
+	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
+	s[strlen(*msg)-append_l-1] = '\0';
+
+	fseek(f, 0, SEEK_END);
+	int l = ftell(f); //total length of the file
+	fseek(f,-l,SEEK_END);
+
+	char new[l], temp[100], temp2[100];
+	int j = 0;
+	for (int i = 0; i<l; i++) {
+		fseek(f, i, SEEK_SET);
+		i = i+get_next_sentence(f,temp);
+		temp[strlen(temp)-1] = '\0';
+		char *w;
+		if (i<l) {
+		printf("comparison:\n%s\n%s\n%d\n", temp, m, strcmp(temp,m));
+		if (strcmp(temp,m)) {
+			temp[strlen(temp)-1] = '\n';
+			strcpy(new+j,temp);
+			j = j+strlen(temp);
+		}
+		}
+			
+	}
+	fclose(f);
+	f = fopen("output.txt", "w");
+	fprintf(f, "%s", new);
+	fclose(f);
+	result = 1;
+	return &result;
+}
+
+int *old_remove (char **msg, struct svc_req *rqstp){
 	static int result; /* must be static! */
 	FILE *f;
 
@@ -183,10 +200,10 @@ int *remove_1_svc (char **msg, struct svc_req *rqstp){
 	char * temp2 = t2;
 	char *x = temp;
 	while (temp = strstr(temp,m)){
-		printf("%s \n %s  %d\n", temp+strlen(m)+1, temp2, strlen(m));
+		printf("\n\n\n\n\n\n%s \n %s  %d\n", temp+strlen(m)+1, temp2, strlen(m));
 		strcpy (temp2, temp);
 		strcpy(temp, temp2+strlen(m)+1);
-		printf("%s\n", temp);
+		//printf("%s\n", temp);
 		temp = temp+strlen(m)+1;
 		
 	}
@@ -195,67 +212,50 @@ int *remove_1_svc (char **msg, struct svc_req *rqstp){
 		result = 0;
 		return &result;
 	}
-	printf("\n\n\n\n\n\n");
 	fprintf(f, "%s\n", x);
 	fclose(f);
-
 	result = 1;
 	return (&result);
 }
 
 int *search_1_svc (char **msg, struct svc_req *rqstp){
-	static int result;
+	static int result; /* must be static! */
 	FILE *f;
-	printf("starting search\n");
-	int x;
-	char s[100]; //get rid of word and brackets
-	char *m = s;
-	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
-	s[strlen(*msg)-append_l-2] = '\0';
-	printf("%s\n", m);
-	
-
-	f = fopen("output.txt", "r");// opens output file 
+	f = fopen("output.txt", "r");
 	if (f == NULL) 
 	{
 		result = 0;
 		return (&result);
 	}
-	printf("%s\n", m);
-	fseek(f,0, SEEK_END);
-	int l = ftell(f);
+	char s[100]; //get rid of word and brackets - should be a function
+	char *m = s;
+	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
+	s[strlen(*msg)-append_l-1] = '\0';
+
+	fseek(f, 0, SEEK_END);
+	int l = ftell(f); //total length of the file
 	fseek(f,-l,SEEK_END);
-	
-	char t[l];
-	static char * temp;
-	temp = t;
-	char * format;
-	//sprintf(format, "%c%d%c\0", '%', l, 'c');
-	fscanf(f, "%500c", temp);
-	printf("%s\n", m);
-	char * temp2 = strstr(temp,m);
-	printf("%s\n", m);
-	int n = 0;
-	printf("before while\n");
-	while (*(temp2-n)!= '\n'){
-		printf("%c, %d\n", *(temp2-n), n);
-		n++;
+
+	char new[l], temp[100], temp2[100];
+	int j = 0;
+	for (int i = 0; i<l; i++) {
+		fseek(f, i, SEEK_SET);
+		i = i+get_next_sentence(f,temp);
+
+		char *w;
+		if (i<l) {
+		if (w = strstr(temp,m)) {
+			printf("found it\n%s", temp);
+			result = 1;
+			return &result;
+		}
+		strcpy(new+j,temp);
+		j = j+strlen(temp);}
+			
 	}
-	printf("after first\n");
-	temp2 = temp2-n;
-	printf("temp %s\n", temp);
-	printf("temp2 %s\n", temp2);
-	while (*(temp+n)!= '\n'){
-		n++;
-	}
-	*(temp+n) = '\0';
-	printf("the return is %s\n", temp);
-	
-	strcpy(*msg, temp);
-	printf("%s\n", *msg);
+	fclose(f);
 	result = 1;
-	printf("and assigning result\n");
-	return (&result);
+	return &result;
 }
 
 int *count_1_svc (char **msg, struct svc_req *rqstp) { //fix for first being the thing you want
@@ -267,7 +267,6 @@ int *count_1_svc (char **msg, struct svc_req *rqstp) { //fix for first being the
 	char *m = s;
 	strncpy(m, *msg+count_l, strlen(*msg)-count_l-1);
 	s[strlen(*msg)-count_l-1] = '\0';
-	printf("%s\n", m);
 	f = fopen("output.txt", "r");// opens output file 
 	if (f == NULL) 
 	{

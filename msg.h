@@ -31,8 +31,8 @@ extern  int * remove_1_svc(char **, struct svc_req *);
 extern  int * count_1(char **, CLIENT *);
 extern  int * count_1_svc(char **, struct svc_req *);
 #define FIND 6
-extern  char * find_1(char **, CLIENT *);
-extern  char * find_1_svc(char **, struct svc_req *);
+extern  int * find_1(char **, CLIENT *);
+extern  int * find_1_svc(char **, struct svc_req *);
 #define SEARCH 7
 extern  int * search_1(char **, CLIENT *);
 extern  int * search_1_svc(char **, struct svc_req *);
@@ -52,8 +52,8 @@ extern  int * remove_1_svc();
 extern  int * count_1();
 extern  int * count_1_svc();
 #define FIND 6
-extern  char * find_1();
-extern  char * find_1_svc();
+extern  int * find_1();
+extern  int * find_1_svc();
 #define SEARCH 7
 extern  int * search_1();
 extern  int * search_1_svc();

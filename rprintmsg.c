@@ -32,9 +32,8 @@ int *dispatch(char *input, CLIENT *cl) {
 		return x;
 	}
 	if (!memcmp(input, fnd, strlen(fnd))) {
-		char *x = find_1(&input, cl);
-		int n = 0;
-		printf("finding %s,   %d\n", x, strlen(x));
+		int *x = find_1(&input, cl);
+		printf("finding  %s\n", input);
 		
 		return x;
 	}
