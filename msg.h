@@ -18,9 +18,6 @@ extern "C" {
 #define MESSAGEVERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)
-#define PRINTMESSAGE 1
-extern  int * printmessage_1(char **, CLIENT *);
-extern  int * printmessage_1_svc(char **, struct svc_req *);
 #define APPEND 2
 extern  int * append_1(char **, CLIENT *);
 extern  int * append_1_svc(char **, struct svc_req *);
@@ -37,14 +34,11 @@ extern  int * count_1_svc(char **, struct svc_req *);
 extern  char * find_1(char **, CLIENT *);
 extern  char * find_1_svc(char **, struct svc_req *);
 #define SEARCH 7
-extern  char * search_1(char **, CLIENT *);
-extern  char * search_1_svc(char **, struct svc_req *);
+extern  int * search_1(char **, CLIENT *);
+extern  int * search_1_svc(char **, struct svc_req *);
 extern int messageprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
-#define PRINTMESSAGE 1
-extern  int * printmessage_1();
-extern  int * printmessage_1_svc();
 #define APPEND 2
 extern  int * append_1();
 extern  int * append_1_svc();
@@ -61,8 +55,8 @@ extern  int * count_1_svc();
 extern  char * find_1();
 extern  char * find_1_svc();
 #define SEARCH 7
-extern  char * search_1();
-extern  char * search_1_svc();
+extern  int * search_1();
+extern  int * search_1_svc();
 extern int messageprog_1_freeresult ();
 #endif /* K&R C */
 

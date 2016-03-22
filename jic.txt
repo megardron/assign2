@@ -16,8 +16,6 @@
 int append_l = 7;
 int count_l = 6;
 int find_l = 5;
-char divider = '\n';
-
 //todo: 
 	//return strings
 	//first word
@@ -27,9 +25,8 @@ int get_next_sentence(FILE *f, char *sen) {
 	fscanf(f, "%100c", sen);
 	for (int i = 0; i<100; i++) {
 		if (*(sen+i)=='\n') {
-			*(sen+i+1) = '\0';
-			printf("%d\n", i);
-			return i;
+			*(sen+i) = '\0';
+			return i+1;
 		}
 	}
 	return -1;
@@ -49,55 +46,61 @@ int *append_1_svc (char **msg, struct svc_req *rqstp) {
 	char *m = s;
 	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
 	s[strlen(*msg)-append_l-1] = '\0';
-	fprintf(f, "%s\n", m);//writes message
+	fprintf(f, "\n%s", m);//writes message
 	fclose(f);
 
-	result = 1; //success
+	result = 1;
 	return (&result);
 }
 
 int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	static int result; /* must be static! */
 	FILE *f;
-	f = fopen("output.txt", "r");
+
+	char s[100]; //get rid of word and brackets
+	char *m = s;
+	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
+	s[strlen(*msg)-append_l-1] = '\0';
+	printf("%s\n", m);
+	f = fopen("output.txt", "r");// opens output file 
 	if (f == NULL) 
 	{
 		result = 0;
 		return (&result);
 	}
-	char s[100]; //get rid of word and brackets - should be a function
-	char *m = s;
-	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
-	s[strlen(*msg)-append_l-1] = '\0';
-
-	fseek(f, 0, SEEK_END);
-	int l = ftell(f); //total length of the file
+	fseek(f,0, SEEK_END);
+	int l = ftell(f);
 	fseek(f,-l,SEEK_END);
-
-	char new[l], temp[100], temp2[100];
-	int j = 0;
-	for (int i = 0; i<l; i++) {
-		fseek(f, i, SEEK_SET);
-		i = i+get_next_sentence(f,temp);
-		printf("%d          %s\n %s\n",i, temp, new);
-		char *w;
-		if (i<l) {
-		while (w = strstr(temp,m)) {
-			strcpy(temp2, w+strlen(m)+1);
-			strcpy(w, temp2);
-		}
-		strcpy(new+j,temp);
-		j = j+strlen(temp);}
-			
+	
+	char t[l];
+	char * temp = t;
+	char * format;
+	
+	sprintf(format, "%c%d%c\0", '%', l, 'c');
+	fscanf(f, format, temp);
+	fclose(f);
+	char t2[l];
+	char * temp2 = t2;
+	char *x = temp;
+	while (temp = strstr(temp,m)){
+		printf("%s \n %s  %d\n", temp+strlen(m)+1, temp2, strlen(m));
+		strcpy (temp2, temp);
+		strcpy(temp, temp+strlen(m)+1);
+		//printf("%s\n", temp);
+		temp = temp+strlen(m)+1;
+		
 	}
+	fopen("output.txt", "w");
+	if (f ==NULL) {
+		result = 0;
+		return &result;
+	}
+	printf("\n\n\n\n\n\n");
+	fprintf(f, "%s\n", x);
 	fclose(f);
-	f = fopen("output.txt", "w");
-	printf("done the for\n%s\n", new);
-	fprintf(f, "%s", new);
-	printf("file printed\n");
-	fclose(f);
+
 	result = 1;
-	return &result;
+	return (&result);
 }
 
 char *find_1_svc (char **msg, struct svc_req *rqstp){

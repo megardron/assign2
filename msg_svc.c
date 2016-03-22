@@ -20,7 +20,6 @@ static void
 messageprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		char *printmessage_1_arg;
 		char *append_1_arg;
 		char *delete_1_arg;
 		char *remove_1_arg;
@@ -36,12 +35,6 @@ messageprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	case NULLPROC:
 		(void) svc_sendreply (transp, (xdrproc_t) xdr_void, (char *)NULL);
 		return;
-
-	case PRINTMESSAGE:
-		_xdr_argument = (xdrproc_t) xdr_wrapstring;
-		_xdr_result = (xdrproc_t) xdr_int;
-		local = (char *(*)(char *, struct svc_req *)) printmessage_1_svc;
-		break;
 
 	case APPEND:
 		_xdr_argument = (xdrproc_t) xdr_wrapstring;
@@ -75,7 +68,7 @@ messageprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 
 	case SEARCH:
 		_xdr_argument = (xdrproc_t) xdr_wrapstring;
-		_xdr_result = (xdrproc_t) xdr_char;
+		_xdr_result = (xdrproc_t) xdr_int;
 		local = (char *(*)(char *, struct svc_req *)) search_1_svc;
 		break;
 

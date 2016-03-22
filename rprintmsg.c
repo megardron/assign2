@@ -39,10 +39,14 @@ int *dispatch(char *input, CLIENT *cl) {
 		return x;
 	}
 	if (!memcmp(input, srch, strlen(fnd))) {
-		char *x = search_1(&input, cl);
-		int n = 0;
-		printf("searching %s,   %d\n", x, strlen(x));
+		char result[100];
+		char *m = result;
+		char **s = &m;
+		strcpy(m,input);
+		int *x = search_1(s, cl);
+		printf("searching, %d\n",m);
 		
+		printf("%s \n", m);
 		return x;
 	}
 	if (!memcmp(input, rmv, strlen(rmv))) {
