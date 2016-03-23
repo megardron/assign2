@@ -14,7 +14,8 @@ cat output.txt
 
 ./client localhost "SEARCH(Here)"
 ./client localhost "SEARCH(another)"
+./client localhost "SEARCH(why)"
 
-./client localhost "REMOVE(This is another sentence.)"
-./client localhost "REMOVE(Here is sentence number one.)"
+#./client localhost "REMOVE(This is another sentence.)"
+#./client localhost "REMOVE(Here is sentence number one.)"
 cat output.txt

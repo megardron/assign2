@@ -205,14 +205,19 @@ char **search_1_svc (char **msg, struct svc_req *rqstp){
 	for (int i = 0; i<l; i++) {
 		fseek(f, i, SEEK_SET);
 		i = i+get_next_sentence(f,temp,l);
-
-		char *w;
-		if (i<l) {
-			if (w = strstr(temp,m)) {
+		char w[100];
+		for (int j = 0; j<strlen(temp); j++) {
+			char *t;
+			t= temp+j;
+			sscanf(t,"%s",w);
+			printf("%d     %s\n",j, w);
+			if (!strcmp(w,m)) {
 				printf("found it\n%s", temp);
 				result = temp;
 				return &result;
 			}
+			j = j+strlen(w);
+		
 		}
 	}
 	fclose(f);

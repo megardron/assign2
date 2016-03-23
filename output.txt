@@ -1,3 +1,6 @@
 Here is sentence number one.
 This is another sentence.
-This is to be tagged to the end of the text.
+This is be tagged the end of the text.
+Here is sentence number one.
+This is another sentence.
+This is be tagged the end of the text.
