@@ -17,6 +17,8 @@ static char* fnd = "FIND";
 static char* rmv = "REMOVE";
 static char* srch = "SEARCH";
 
+int * ret;
+
 int *dispatch(char *input, CLIENT *cl) {
 	if (!memcmp(input, app, strlen(app))) {
 		printf("appending\n");
@@ -27,26 +29,41 @@ int *dispatch(char *input, CLIENT *cl) {
 		return delete_1(&input, cl);
 	}
 	if (!memcmp(input, cnt, strlen(cnt))) {
-		int *x = count_1(&input, cl);
-		printf("counting %d\n", *x);
-		return x;
+		ret = count_1(&input, cl);
+		if (*ret !=-1) {
+			printf("counting %d\n", *ret);
+			*ret = *ret||1;
+			return ret;
+		}
+		*ret = 0;
+		return ret;
 	}
 	if (!memcmp(input, fnd, strlen(fnd))) {
-		int *x = find_1(&input, cl);
-		printf("finding  %s\n", input);
+		char **x = find_1(&input, cl);
+		if (*x!=NULL) {
+			*ret = 1;
+			printf("finding \n%s\n", *x);
+			
+			return ret;
+		}
 		
-		return x;
+		*ret = 0;
+		return ret;
 	}
 	if (!memcmp(input, srch, strlen(fnd))) {
-		char result[100];
-		char *m = result;
-		char **s = &m;
-		strcpy(m,input);
-		int *x = search_1(s, cl);
-		printf("searching, %d\n",m);
-		
-		printf("%s \n", m);
-		return x;
+		char **x = search_1(&input, cl);
+		printf("searching, \n%s\n",*x);
+		if ((*x)!=NULL) {
+			//printf("searching, \n%s\n",*x);
+			free(*x);
+			printf("yo\n");
+			*ret = 1;
+			printf("???\n");
+			return ret;
+		}
+		*ret = 0;
+		free(*x);
+		return ret;
 	}
 	if (!memcmp(input, rmv, strlen(rmv))) {
 		printf("removing\n");
@@ -64,7 +81,6 @@ int main(int argc, char *argv[])
 	int *result;
 	char *server;
 	char *message;
-
 	if (argc < 3) {
 		fprintf(stderr, "usage: %s host message\n", argv[0]);
 		exit(1);
@@ -126,6 +142,5 @@ int main(int argc, char *argv[])
 	 * The message was output on the server
 	 */
 	printf("Message delivered to %s!\n", server);
-
 	return 0;
 }

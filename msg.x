@@ -10,7 +10,7 @@ program MESSAGEPROG {
 		int DELETE(string) = 3;
 		int REMOVE(string) = 4;
 		int COUNT(string) = 5;
-		int FIND(string) = 6;
-		int SEARCH(string) = 7;
+		string FIND(string) = 6;
+		string SEARCH(string) = 7;
 	} = 1;
 } = 0x20083001;

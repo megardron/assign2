@@ -62,13 +62,13 @@ messageprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 
 	case FIND:
 		_xdr_argument = (xdrproc_t) xdr_wrapstring;
-		_xdr_result = (xdrproc_t) xdr_int;
+		_xdr_result = (xdrproc_t) xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *)) find_1_svc;
 		break;
 
 	case SEARCH:
 		_xdr_argument = (xdrproc_t) xdr_wrapstring;
-		_xdr_result = (xdrproc_t) xdr_int;
+		_xdr_result = (xdrproc_t) xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *)) search_1_svc;
 		break;
 
