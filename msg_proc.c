@@ -20,14 +20,27 @@ char *test;
 	//first word
 	//partial matches
 	//return int pointers from char pointers or whatev
-int get_next_sentence(FILE *f, char *sen) {
+
+int get_file_length (FILE *f) {
+	fseek(f, 0, SEEK_END);
+	int l = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	return l;
+}
+
+int get_next_sentence(FILE *f, char *sen, int l) {
 	if (f==NULL) return -1;
 	fscanf(f, "%100c", sen);
-	for (int i = 0; i<100; i++) {
+	printf("%d     %d\n",ftell(f), l);
+	
+	for (int i = 0;(i<100||!feof(f)); i++) {
 		if (*(sen+i)=='\n') {
 			*(sen+i+1) = '\0';
 			return i;
 		}
+	}
+	if (ftell(f)>=l) {
+		return l;
 	}
 	return -1;
 }
@@ -67,23 +80,21 @@ int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
 	s[strlen(*msg)-append_l-1] = '\0';
 
-	fseek(f, 0, SEEK_END);
-	int l = ftell(f); //total length of the file
-	fseek(f,-l,SEEK_END);
+	int l = get_file_length(f);
 
 	char new[l], temp[100], temp2[100];
 	int j = 0;
 	for (int i = 0; i<l; i++) {
 		fseek(f, i, SEEK_SET);
-		i = i+get_next_sentence(f,temp);
+		i = i+get_next_sentence(f,temp,l);
+		printf("deleeeete %d \n",i);
 		char *w;
-		if (i<l) {
 		while (w = strstr(temp,m)) {
 			strcpy(temp2, w+strlen(m)+1);
 			strcpy(w, temp2);
 		}
 		strcpy(new+j,temp);
-		j = j+strlen(temp);}
+		j = j+strlen(temp);
 			
 	}
 	fclose(f);
@@ -108,24 +119,23 @@ int *remove_1_svc (char **msg, struct svc_req *rqstp){
 	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
 	s[strlen(*msg)-append_l-1] = '\0';
 
-	fseek(f, 0, SEEK_END);
-	int l = ftell(f); //total length of the file
-	fseek(f,-l,SEEK_END);
+	int l = get_file_length(f);
 
-	char new[l], temp[100], temp2[100];
+	char new[l], temp[100];
 	int j = 0;
 	for (int i = 0; i<l; i++) {
 		fseek(f, i, SEEK_SET);
-		i = i+get_next_sentence(f,temp);
+		i = i+get_next_sentence(f,temp,l);
 		temp[strlen(temp)-1] = '\0';
 		char *w;
 		if (i<l) {
 		printf("comparison:\n%s\n%s\n%d\n", temp, m, strcmp(temp,m));
-		if (strcmp(temp,m)) {
-			temp[strlen(temp)-1] = '\n';
-			strcpy(new+j,temp);
-			j = j+strlen(temp);
-		}
+			if (strcmp(temp,m)) {
+				temp[strlen(temp)] = '\n';
+				strcpy(new+j,temp);
+				j = j+strlen(temp);
+				printf("%s\n", new);
+			}
 		}
 			
 	}
@@ -146,7 +156,7 @@ char **find_1_svc (char **msg, struct svc_req *rqstp) {
 		result = NULL;
 		return (&result);
 	}
-	
+	int l = get_file_length(f);
 	int x;
 	char s[100]; //get rid of word and brackets
 	char *m = s;
@@ -154,17 +164,23 @@ char **find_1_svc (char **msg, struct svc_req *rqstp) {
 
 	s[strlen(*msg)] = '\0';
 	x = atoi(m);
-	int l = 0;
+	int j = 0;
 	char *temp = malloc(sizeof(char)*100);
 	for (int i = 0; i<x; i++) {
-		l = l+get_next_sentence(f, temp)+1;
-		fseek(f, l, SEEK_SET);
+		j = j+1+get_next_sentence(f,temp,l);
+		printf("find length %d  %d\n",l, j);
+		
+		if (j>l) {
+			printf("\n\n\n\n\n\n");
+			printf("and now...");
+			strcpy(temp, "There are fewer lines than the number entered.");
+			result = temp;
+			return &result;
+		}
+		else {
+			fseek(f, j, SEEK_SET);
+		}
 	}
-
-	//*(*msg) = *temp;
-	//strcpy(test,temp);
-	//*msg = temp;
-	printf("Okay.....    %d   %c\n%s\n%s\n",msg, temp[24],temp,*msg);
 	result = temp;
 	return &result;
 
@@ -183,14 +199,12 @@ char **search_1_svc (char **msg, struct svc_req *rqstp){
 	strncpy(m, *msg+append_l, strlen(*msg)-append_l-1);
 	s[strlen(*msg)-append_l-1] = '\0';
 
-	fseek(f, 0, SEEK_END);
-	int l = ftell(f); //total length of the file
-	fseek(f,-l,SEEK_END);
+	int l = get_file_length(f);
 
 	char *temp = malloc(sizeof(char)*100);
 	for (int i = 0; i<l; i++) {
 		fseek(f, i, SEEK_SET);
-		i = i+get_next_sentence(f,temp);
+		i = i+get_next_sentence(f,temp,l);
 
 		char *w;
 		if (i<l) {
@@ -202,11 +216,12 @@ char **search_1_svc (char **msg, struct svc_req *rqstp){
 		}
 	}
 	fclose(f);
-	result = NULL;
+	strcpy(temp, "The word you entered is not in a sentence.");
+	result = temp;
 	return &result;
 }
 
-int *count_1_svc (char **msg, struct svc_req *rqstp) { //fix for first being the thing you want
+int *count_1_svc (char **msg, struct svc_req *rqstp) {
 
 	static int result; /* must be static! */
 	FILE *f;
@@ -221,23 +236,28 @@ int *count_1_svc (char **msg, struct svc_req *rqstp) { //fix for first being the
 		result = -1;
 		return (&result);
 	}
-	fseek(f,0, SEEK_END);
-	int l = ftell(f);
-	fseek(f,-l,SEEK_END);
+	int l = get_file_length(f);
 	int count = 0;
 	char t[l];
 	char * temp = t;
 	char * format;
-	sprintf(format, "%c%d%c\0", '%', l, 'c');
-	fscanf(f, format, temp);
-	while (temp = strstr(temp,m)){
-		count++;
-		printf("%s\n", temp);
-		temp = temp+strlen(m);
+	for (int i=0;i<l;i++) {
+		fscanf(f, "%s", temp);
+		int word_len = strlen(temp);
+		if (temp[word_len-1]=='.') {
+			temp[word_len-1] = '\0';
+		}
+		printf("temp %s   %d    %d    %d\n", temp, i, word_len, count);
+		if (!strcmp(temp, m)) {
+			printf("match %s\n", temp); 
+			count++;
+		}
+		i = i+word_len;
+		fseek(f,i,SEEK_SET);
+		printf("end %s   %d     %d    %d\n", temp, i, word_len, count);
 	}
 
 	fclose(f);
-
 	result = count;
 	return (&result);
 }

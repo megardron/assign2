@@ -17,7 +17,7 @@ static char* fnd = "FIND";
 static char* rmv = "REMOVE";
 static char* srch = "SEARCH";
 
-int * ret;
+static int * ret;
 
 int *dispatch(char *input, CLIENT *cl) {
 	if (!memcmp(input, app, strlen(app))) {
@@ -35,34 +35,29 @@ int *dispatch(char *input, CLIENT *cl) {
 			*ret = *ret||1;
 			return ret;
 		}
-		*ret = 0;
+		ret = 0;
 		return ret;
 	}
 	if (!memcmp(input, fnd, strlen(fnd))) {
+		printf("start\n");
 		char **x = find_1(&input, cl);
-		if (*x!=NULL) {
+		printf("before if\n");
+		if (x!=NULL) {
 			*ret = 1;
 			printf("finding \n%s\n", *x);
-			
+			free(*x);
 			return ret;
 		}
-		
-		*ret = 0;
 		return ret;
 	}
 	if (!memcmp(input, srch, strlen(fnd))) {
 		char **x = search_1(&input, cl);
-		printf("searching, \n%s\n",*x);
-		if ((*x)!=NULL) {
-			//printf("searching, \n%s\n",*x);
+		if (x!=NULL) {
+			printf("searching, \n%s\n",*x);
 			free(*x);
-			printf("yo\n");
 			*ret = 1;
-			printf("???\n");
 			return ret;
 		}
-		*ret = 0;
-		free(*x);
 		return ret;
 	}
 	if (!memcmp(input, rmv, strlen(rmv))) {
@@ -81,6 +76,8 @@ int main(int argc, char *argv[])
 	int *result;
 	char *server;
 	char *message;
+	ret = malloc(sizeof(int));
+	int *save = ret;
 	if (argc < 3) {
 		fprintf(stderr, "usage: %s host message\n", argv[0]);
 		exit(1);
@@ -142,5 +139,6 @@ int main(int argc, char *argv[])
 	 * The message was output on the server
 	 */
 	printf("Message delivered to %s!\n", server);
+	free(save);
 	return 0;
 }
