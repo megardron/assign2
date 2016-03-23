@@ -16,10 +16,24 @@ int find_l = 5;
 char divider = '\n';
 char *test;
 
-//todo: 
-	//first word
-	//partial matches
-	//return int pointers from char pointers or whatev
+/* TODO
+	error handling of some kind
+		too long
+		not a sentence
+		just generally wrong form
+			no brackets, etc
+	not having everything called append_l
+	call from command line?
+		if not fn for cleaning up the args
+	split on '.' not necessarily newline?
+	rename to user and text-server
+	do something with the return value?
+	case sensitivity?
+	README describing what is done by each
+	pseudocode with discussion
+	comments
+	debugging..........
+*/
 
 int get_file_length (FILE *f) {
 	fseek(f, 0, SEEK_END);
@@ -83,18 +97,26 @@ int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	int l = get_file_length(f);
 
 	char new[l], temp[100], temp2[100];
-	int j = 0;
+	int k = 0;
 	for (int i = 0; i<l; i++) {
 		fseek(f, i, SEEK_SET);
 		i = i+get_next_sentence(f,temp,l);
 		printf("deleeeete %d \n",i);
-		char *w;
-		while (w = strstr(temp,m)) {
-			strcpy(temp2, w+strlen(m)+1);
-			strcpy(w, temp2);
+		char w[100];
+		for (int j = 0; j<strlen(temp); j++) {
+			char *t;
+			t= temp+j;
+			sscanf(t,"%s",w);
+			printf("%d     %s\n",j, w);
+			if (!strcmp(w,m)) {
+				strcpy(temp2, t+strlen(w));
+				strcpy(t, temp2+1);
+			}
+			j = j+strlen(w);
+		
 		}
-		strcpy(new+j,temp);
-		j = j+strlen(temp);
+		strcpy(new+k,temp);
+		k = k+strlen(temp);
 			
 	}
 	fclose(f);
