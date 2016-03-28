@@ -19,6 +19,6 @@ cat output.txt
 #./client localhost "APPEND(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)"
 
 
-./client localhost "REMOVE(This is another sentence.)"
-./client localhost "REMOVE(Here is sentence number one.)"
+#./client localhost "REMOVE(This is another sentence.)"
+#./client localhost "REMOVE(Here is sentence number one.)"
 cat output.txt
