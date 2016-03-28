@@ -31,10 +31,11 @@ char *test;
 	case sensitivity?
 	README describing what is done by each
 	pseudocode with discussion
+	what happens with each fn if the file is empty, append works...but the rest?
 	comments
 	debugging..........
 */
-
+/* Used to get the file length and then reset the file pointer to the start of the file */
 int get_file_length (FILE *f) {
 	fseek(f, 0, SEEK_END);
 	int l = ftell(f);
@@ -42,6 +43,7 @@ int get_file_length (FILE *f) {
 	return l;
 }
 
+/* Gets the next sentence (max length 100) of the file, returns the length of the sentence */
 int get_next_sentence(FILE *f, char *sen, int l) {
 	if (f==NULL) return -1;
 	fscanf(f, "%100c", sen);
@@ -59,6 +61,8 @@ int get_next_sentence(FILE *f, char *sen, int l) {
 	return -1;
 }
 
+
+/* Appends the given sentence to the end of the file */
 int *append_1_svc (char **msg, struct svc_req *rqstp) {
 	static int result; /* must be static! */
 	FILE *f;
@@ -80,6 +84,7 @@ int *append_1_svc (char **msg, struct svc_req *rqstp) {
 	return (&result);
 }
 
+/* Deletes all incidences of the given word from the file. */
 int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	static int result; /* must be static! */
 	FILE *f;
@@ -127,6 +132,8 @@ int *delete_1_svc (char **msg, struct svc_req *rqstp) {
 	return &result;
 }
 
+
+/* Removes the first incidence of the given sentence from the file */
 int *remove_1_svc (char **msg, struct svc_req *rqstp){
 	static int result; /* must be static! */
 	FILE *f;
@@ -169,6 +176,7 @@ int *remove_1_svc (char **msg, struct svc_req *rqstp){
 	return &result;
 }
 
+/* Finds and returns the nth sentence in the file */
 char **find_1_svc (char **msg, struct svc_req *rqstp) {
 	static char * result;
 	FILE *f;
@@ -207,6 +215,8 @@ char **find_1_svc (char **msg, struct svc_req *rqstp) {
 	return &result;
 
 }
+
+/* Finds the first incidence of a given word and returns that sentence. */
 
 char **search_1_svc (char **msg, struct svc_req *rqstp){
 	static char *result; /* must be static! */
@@ -248,6 +258,7 @@ char **search_1_svc (char **msg, struct svc_req *rqstp){
 	return &result;
 }
 
+/* Counts how many times the given word occurs in the file. */
 int *count_1_svc (char **msg, struct svc_req *rqstp) {
 
 	static int result; /* must be static! */
