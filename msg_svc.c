@@ -24,7 +24,7 @@ messageprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		char *delete_1_arg;
 		char *remove_1_arg;
 		char *count_1_arg;
-		char *find_1_arg;
+		int find_1_arg;
 		char *search_1_arg;
 	} argument;
 	char *result;
@@ -61,7 +61,7 @@ messageprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		break;
 
 	case FIND:
-		_xdr_argument = (xdrproc_t) xdr_wrapstring;
+		_xdr_argument = (xdrproc_t) xdr_int;
 		_xdr_result = (xdrproc_t) xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *)) find_1_svc;
 		break;
