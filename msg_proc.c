@@ -13,15 +13,6 @@
 
 char divider = '.';
 
-/* TODO
-	error handling of some kind
-		not a sentence - currently add a '.'
-	call from command line?
-	rename to user and text-server
-	do something with the return value?
-	case sensitivity?
-	discussion
-*/
 /* Used to get the file length and then reset the file pointer to the start of the file */
 int get_file_length (FILE *f) {
 	fseek(f, 0, SEEK_END);
@@ -38,7 +29,6 @@ int get_next_sentence(FILE *f, char *sen, int l) {
 	for (int i = 0;(i<100||!feof(f)); i++) {
 		if (*(sen+i)==divider) { //we have found the end of the sentence
 			*(sen+i+1) = '\0'; //indicate the new end of the s
-			printf("we did it kids\n");
 			return i;
 		}
 	}
@@ -62,9 +52,9 @@ int *append_1_svc (char **msg, struct svc_req *rqstp) {
 	}
 	int l = strlen(*msg);
 	
-	if (ftell(f)) {	 printf("not the first\n");
-		fprintf(f, "\n");	
-	}
+	//if (ftell(f)) {
+	//	fprintf(f, "\n");	
+	//}
 	fprintf(f, "%s", *msg);//writes message
 	if ((*msg)[l-1] != divider) {
 		
@@ -144,7 +134,7 @@ int *remove_1_svc (char **msg, struct svc_req *rqstp){
 		fseek(f, i, SEEK_SET);
 		i = i+get_next_sentence(f,temp,l);
 		temp[strlen(temp)-1] = '\0';
-		printf("%s\n%s\n", temp, msg);
+		printf("1:%s\n2:%s\n", temp, *msg);
 		char *w;
 		if (i<l) {
 			if (strcmp(temp, *msg)) {

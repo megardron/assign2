@@ -9,6 +9,7 @@
 cat output.txt
 #so far so good
 
+
 ./client localhost "FIND(2)"
 ./client localhost "FIND(4)"
 
@@ -19,6 +20,6 @@ cat output.txt
 #./client localhost "APPEND(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)"
 
 
-#./client localhost "REMOVE(This is another sentence.)"
-#./client localhost "REMOVE(Here is sentence number one.)"
+./client localhost "REMOVE(This is another sentence.)"
+./client localhost "REMOVE(Here is sentence number one.)"
 cat output.txt

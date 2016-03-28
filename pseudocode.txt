@@ -25,7 +25,7 @@ Delete:
 	write the string to the file
 	return 1
 
-This function solves the problem by searching through for the word entered, if it finds it, it shifts the sentence over by enough to effectively delete the word. It then writes the string to disk.
+This function solves the problem by searching through for the (case sensitive) word entered, if it finds it, it shifts the sentence over by enough to effectively delete the word. It then writes the string to disk.
 
 
 Remove:
@@ -41,7 +41,7 @@ Remove:
 	write the new string to the file
 	return 1
 
-This function goes through sentence by sentence and checks if the sentence matches the one to be removed. If it does not it copies the sentence into a new buffer which is saved to disk at the end.
+This function goes through sentence by sentence and checks if the sentence matches (including the case) the one to be removed. If it does not it copies the sentence into a new buffer which is saved to disk at the end.
 
 
 Find:
@@ -69,7 +69,7 @@ Search:
 				return the sentence
 	return an error message
 
-Search goes through the text sentence by sentence. In each sentence it checks each word against the word entered, and if it finds a match it returns the message. If it doesn't find a match anywhere it will return an error message to notify the user.
+Search goes through the text sentence by sentence. In each sentence it checks each word against the word entered, and if it finds a (case sensitive) match it returns the message. If it doesn't find a match anywhere it will return an error message to notify the user.
 
 
 Count:
@@ -83,4 +83,4 @@ Count:
 			inc count
 	return count
 
-Count goes through the entire file word by word, checking them against the entered text. If it matches the count is increased. Once it has gone through the entire file it returns the count to the user.
+Count goes through the entire file word by word, checking each word against the entered text. This comparison is case sensitive. If it matches the count is increased. Once it has gone through the entire file it returns the count to the user.
