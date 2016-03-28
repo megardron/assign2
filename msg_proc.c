@@ -31,7 +31,6 @@ char *test;
 	case sensitivity?
 	README describing what is done by each
 	pseudocode with discussion
-	what happens with each fn if the file is empty, append works...but the rest?
 	comments
 	debugging..........
 */

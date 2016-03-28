@@ -1,2 +1,3 @@
 Here is sentence number one.
-This is tagged the end of the text.
+This is another sentence.
+This is be tagged the end of the text.
