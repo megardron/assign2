@@ -1,0 +1,86 @@
+Pseudocode:
+
+
+Append:
+
+	open file, append mode
+	if it fails 
+		return 0
+	append the message onto the end
+	save the file
+	return 1
+
+This opens the file with the file pointer at the end and writes the new sentence (plus a newline for formatting if the sentence isn't the first one).
+
+
+Delete:
+
+	open file
+	if it fails
+		return 0
+	for each sentence in the file
+		for word in sentence
+			if match
+				copy the string to remove it
+	write the string to the file
+	return 1
+
+This function solves the problem by searching through for the word entered, if it finds it, it shifts the sentence over by enough to effectively delete the word. It then writes the string to disk.
+
+
+Remove:
+
+	open file
+	if it fails
+		return 0
+	for each sentence in the file
+		get the sentence
+		compare to the sentence to be removed
+		if they aren’t the same
+			copy sentence into new buffer
+	write the new string to the file
+	return 1
+
+This function goes through sentence by sentence and checks if the sentence matches the one to be removed. If it does not it copies the sentence into a new buffer which is saved to disk at the end.
+
+
+Find:
+
+	open file
+	if it fails
+		return 0
+	for each sentence less than the number entered
+		get the sentence
+		if there are aren’t enough sentences
+			return an error message
+	return the nth sentence
+
+Find loads the next sentence n times, returning the nth. If there are less sentences than the number entered, it returns a string that notifies the user of this.
+
+
+Search:
+
+	open file
+	if it fails
+		return 0
+	for each sentence in the file
+		for each word in the sentence
+			if it’s the same as the entered word
+				return the sentence
+	return an error message
+
+Search goes through the text sentence by sentence. In each sentence it checks each word against the word entered, and if it finds a match it returns the message. If it doesn't find a match anywhere it will return an error message to notify the user.
+
+
+Count:
+
+	open file
+	if it fails
+		return 0
+	for each sentence in the file
+		for each word in the sentence
+			if it matches
+			inc count
+	return count
+
+Count goes through the entire file word by word, checking them against the entered text. If it matches the count is increased. Once it has gone through the entire file it returns the count to the user.
