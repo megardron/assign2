@@ -38,7 +38,6 @@ int sanitize(char *msg, int fn_len) {
 	}
 	char t[100];
 	msg[l-1] = '\0';
-	printf("d\n");
 	strcpy(t,msg+fn_len);
 	strcpy(msg,t);
 	return 1;
@@ -77,7 +76,7 @@ int *dispatch(char *input, CLIENT *cl) {
 			return ret;
 		}
 		else {
-			printf("please enter an integer as the argument to find.\n");
+			printf("Please enter an integer as the argument to find.\n");
 		}
 	}
 	if (!memcmp(input, srch, strlen(fnd))&&sanitize(input,append_l)) {
@@ -109,7 +108,7 @@ int main(int argc, char *argv[])
 
 	ret = malloc(sizeof(int));
 
-	if (argc < 3) {
+	if (argc != 3) {
 		fprintf(stderr, "usage: %s host message\n", argv[0]);
 		exit(1);
 	}
@@ -170,7 +169,5 @@ int main(int argc, char *argv[])
 	 * The message was output on the server
 	 */
 	printf("Message delivered to %s!\n", server);
-	//char t[1000] = "APPEND(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)";
-	//printf("%d       %s\n",sanitize(t, append_l), t);
 	return 0;
 }
